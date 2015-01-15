@@ -7,7 +7,7 @@ var influxIP = process.env.INFLUX_IP || 'localhost';
 require('seneca')()
   .use('redis-transport')
   .use('beanstalk-transport')
-  .use('collector', { host: influxIP })
+  .use('collector', { host: influxIP, database: 'stats', seriesName: 'actions' })
   .use('../info.js')
   .client({host: redisIP, type:'redis',pin:'role:info,req:part'})
   .listen({host: redisIP, type:'redis',pin:'role:info,res:part'})
