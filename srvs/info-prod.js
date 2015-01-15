@@ -1,10 +1,15 @@
 'use strict';
 
+var redisIP = process.env.REDIS_IP || 'localhost';
+var beanstakIP = process.env.BEANSTALK_IP || 'localhost';
+var influxIP = process.env.INFLUX_IP || 'localhost';
+
 require('seneca')()
   .use('redis-transport')
   .use('beanstalk-transport')
+  .use('collector', { host: influxIP })
   .use('../info.js')
-  .client({host: process.env.REDIS_IP, type:'redis',pin:'role:info,req:part'})
-  .listen({host: process.env.REDIS_IP, type:'redis',pin:'role:info,res:part'})
-  .listen({host: process.env.BEANSTALK_IP, port: 1130, type: 'beanstalk', pin: 'role:info,cmd:*'});
+  .client({host: redisIP, type:'redis',pin:'role:info,req:part'})
+  .listen({host: redisIP, type:'redis',pin:'role:info,res:part'})
+  .listen({host: beanstakIP, port: 1130, type: 'beanstalk', pin: 'role:info,cmd:*'});
 
